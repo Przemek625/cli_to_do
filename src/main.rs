@@ -21,7 +21,7 @@ fn handle_add_task(tasks: &mut Vec<Task>) {
     println!("Added a new task: {:?}", tasks.last().unwrap().title)
 }
 
-fn handle_save_tasks(tasks: &mut Vec<Task>) {
+fn handle_save_tasks(tasks: &Vec<Task>) {
     let file_name = String::from("tasks.jsonl");
     let mut file = File::create(&file_name).unwrap();
     for task in tasks {
@@ -32,7 +32,7 @@ fn handle_save_tasks(tasks: &mut Vec<Task>) {
     println!("Saved tasks to: {:?}", file_name);
 }
 
-fn handle_exit(tasks: &mut Vec<Task>) {
+fn handle_exit(tasks: &Vec<Task>) {
     let mut buffer = String::new();
     println!("Would you like to save your current work(y/n)?");
     io::stdin().read_line(&mut buffer).unwrap();
