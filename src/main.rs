@@ -2,9 +2,13 @@ use crate::task::Task;
 use std::io;
 use std::string::String;
 mod task;
+mod task_list;
+
 use std::fs::File;
-use std::io::Write;
+use std::io::{BufRead, BufReader, Write};
 use uuid::Uuid;
+
+const FILE_NAME: &str = "tasks.jsonl";
 
 fn handle_add_task(tasks: &mut Vec<Task>) {
     let mut buffer = String::new();
@@ -22,14 +26,24 @@ fn handle_add_task(tasks: &mut Vec<Task>) {
 }
 
 fn handle_save_tasks(tasks: &Vec<Task>) {
-    let file_name = String::from("tasks.jsonl");
-    let mut file = File::create(&file_name).unwrap();
+    let mut file = File::options().create(true).write(true).open(&FILE_NAME).unwrap();
     for task in tasks {
         let serialized_task = serde_json::to_string(&task).unwrap();
         file.write_all(format!("{}\n", serialized_task).as_bytes())
             .unwrap();
     }
-    println!("Saved tasks to: {:?}", file_name);
+    println!("Saved tasks to: {:?}", FILE_NAME);
+}
+
+fn read_tasks() -> Vec<Task> {
+    let file = File::open(&FILE_NAME).unwrap();
+    let mut reader = BufReader::new(file);
+    let mut tasks: Vec<Task> = Vec::new();
+    for line in reader.lines() {
+        let task:Task = serde_json::from_str(line.unwrap().as_str()).unwrap();
+        tasks.push(task)
+    }
+    tasks
 }
 
 fn handle_exit(tasks: &Vec<Task>) {
@@ -67,7 +81,7 @@ fn print_menu() {
 }
 
 fn main() {
-    let mut tasks: Vec<Task> = Vec::new();
+    let mut tasks: Vec<Task> = read_tasks();
 
     let mut buffer = String::new();
 
