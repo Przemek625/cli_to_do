@@ -26,8 +26,21 @@ fn handle_add_task(task_list: &mut TaskList) {
     println!("Added a new task")
 }
 
+fn handle_delete_task(task_list: &mut TaskList) {
+    println!("What is the task`s id?");
+    let mut buffer = String::new();
+    io::stdin().read_line(&mut buffer).expect("Exception occurred");
+    let task_id = buffer.trim();
+    if (task_list.remove_task(&task_id)) {
+        println!("Task: {:?} has been deleted", task_id)
+    } else {
+        println!("Task: {:?} is not on the list", task_id)
+    }
+}
+
+
 fn handle_save_task_list(task_list: &TaskList) {
-    let mut file = File::options().create(true).write(true).open(&FILE_NAME).unwrap();
+    let mut file = File::options().create(true).write(true).truncate(true).open(&FILE_NAME).unwrap();
     for task in task_list.all() {
         let serialized_task = serde_json::to_string(&task).unwrap();
         file.write_all(format!("{}\n", serialized_task).as_bytes())
@@ -74,6 +87,7 @@ fn print_options() {
     println!("0: Exit");
     println!("1: Add new task");
     println!("2: Save task_list list");
+    println!("3: Delete task");
 }
 fn print_menu() {
     println!("\n=== To-Do CLI Menu ===");
@@ -102,6 +116,9 @@ fn main() {
             "2" => {
                 handle_save_task_list(&mut task_list);
             }
+            "3" => {
+                handle_delete_task(&mut task_list);
+            }
             _ => {
                 println!("Invalid option one of:");
                 print_options();
@@ -109,3 +126,4 @@ fn main() {
         }
     }
 }
+
