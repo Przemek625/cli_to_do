@@ -7,10 +7,11 @@ mod task_list;
 use std::fs::File;
 use std::io::{BufRead, BufReader, Write};
 use uuid::Uuid;
+use crate::task_list::TaskList;
 
 const FILE_NAME: &str = "tasks.jsonl";
 
-fn handle_add_task(tasks: &mut Vec<Task>) {
+fn handle_add_task(task_list: &mut TaskList) {
     let mut buffer = String::new();
     println!("Task title:");
     io::stdin()
@@ -21,32 +22,32 @@ fn handle_add_task(tasks: &mut Vec<Task>) {
         title: String::from(buffer.trim()),
         is_completed: false,
     };
-    tasks.push(task);
-    println!("Added a new task: {:?}", tasks.last().unwrap().title)
+    task_list.add_task(task);
+    println!("Added a new task")
 }
 
-fn handle_save_tasks(tasks: &Vec<Task>) {
+fn handle_save_task_list(task_list: &TaskList) {
     let mut file = File::options().create(true).write(true).open(&FILE_NAME).unwrap();
-    for task in tasks {
+    for task in task_list.all() {
         let serialized_task = serde_json::to_string(&task).unwrap();
         file.write_all(format!("{}\n", serialized_task).as_bytes())
             .unwrap();
     }
-    println!("Saved tasks to: {:?}", FILE_NAME);
+    println!("Saved task_list to: {:?}", FILE_NAME);
 }
 
-fn read_tasks() -> Vec<Task> {
+fn load_task_list_from_file() -> TaskList {
     let file = File::open(&FILE_NAME).unwrap();
     let mut reader = BufReader::new(file);
-    let mut tasks: Vec<Task> = Vec::new();
+    let mut task_list = TaskList::new();
     for line in reader.lines() {
         let task:Task = serde_json::from_str(line.unwrap().as_str()).unwrap();
-        tasks.push(task)
+        task_list.add_task(task)
     }
-    tasks
+    task_list
 }
 
-fn handle_exit(tasks: &Vec<Task>) {
+fn handle_exit(task_list: &TaskList) {
     let mut buffer = String::new();
     println!("Would you like to save your current work(y/n)?");
     io::stdin().read_line(&mut buffer).unwrap();
@@ -54,7 +55,7 @@ fn handle_exit(tasks: &Vec<Task>) {
     loop {
         match input.as_str() {
             "y" => {
-                handle_save_tasks(tasks);
+                handle_save_task_list(task_list);
                 break;
             }
             "n" => {
@@ -72,7 +73,7 @@ fn handle_exit(tasks: &Vec<Task>) {
 fn print_options() {
     println!("0: Exit");
     println!("1: Add new task");
-    println!("2: Save tasks list");
+    println!("2: Save task_list list");
 }
 fn print_menu() {
     println!("\n=== To-Do CLI Menu ===");
@@ -81,7 +82,7 @@ fn print_menu() {
 }
 
 fn main() {
-    let mut tasks: Vec<Task> = read_tasks();
+    let mut task_list = load_task_list_from_file();
 
     let mut buffer = String::new();
 
@@ -92,14 +93,14 @@ fn main() {
         let input = buffer.trim();
         match input {
             "0" => {
-                handle_exit(&mut tasks);
+                handle_exit(&mut task_list);
                 break;
             }
             "1" => {
-                handle_add_task(&mut tasks);
+                handle_add_task(&mut task_list);
             }
             "2" => {
-                handle_save_tasks(&mut tasks);
+                handle_save_task_list(&mut task_list);
             }
             _ => {
                 println!("Invalid option one of:");

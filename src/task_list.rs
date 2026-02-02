@@ -27,4 +27,8 @@ impl TaskList {
             None => false
         }
     }
+
+    pub fn all(&self) -> &Vec<Task> {
+        &self.tasks
+    }
 }
