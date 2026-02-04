@@ -90,6 +90,7 @@ fn handle_list_tasks(task_list: &TaskList) {
 }
 
 fn handle_task_completed(task_list: &mut TaskList) -> bool {
+    println!("What is the task` if that you have completed?");
     let mut buffer = String::new();
     io::stdin().read_line(&mut buffer).expect("Error occurred");
     let task_id = buffer.trim();
@@ -100,6 +101,7 @@ fn handle_task_completed(task_list: &mut TaskList) -> bool {
         }
         Some(t) => {
             t.is_completed = true;
+            println!("task {} has been completed", task_id);
             true
         }
     }
@@ -111,6 +113,7 @@ fn print_options() {
     println!("2: Save task_list list");
     println!("3: Delete task");
     println!("4: List tasks");
+    println!("5: Set task completed");
 }
 fn print_menu() {
     println!("\n=== To-Do CLI Menu ===");
