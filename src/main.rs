@@ -89,6 +89,22 @@ fn handle_list_tasks(task_list: &TaskList) {
     }
 }
 
+fn handle_task_completed(task_list: &mut TaskList) -> bool {
+    let mut buffer = String::new();
+    io::stdin().read_line(&mut buffer).expect("Error occurred");
+    let task_id = buffer.trim();
+    let task = task_list.get_by_id(task_id);
+    match task {
+        None => {
+            false
+        }
+        Some(t) => {
+            t.is_completed = true;
+            true
+        }
+    }
+}
+
 fn print_options() {
     println!("0: Exit");
     println!("1: Add new task");
@@ -129,6 +145,9 @@ fn main() {
             "4" => {
               handle_list_tasks(&mut task_list);
             },
+            "5" => {
+                handle_task_completed(&mut task_list);
+            }
             _ => {
                 println!("Invalid option one of:");
                 print_options();

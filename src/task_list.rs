@@ -9,8 +9,8 @@ impl TaskList {
         TaskList { tasks: Vec::new() }
     }
 
-    pub fn get_by_id(&self, id: &str) -> Option<&Task> {
-        self.tasks.iter().find(|task| task.id == id)
+    pub fn get_by_id(&mut self, id: &str) -> Option<&mut Task> {
+        self.tasks.iter_mut().find(|task| task.id == id)
     }
 
     pub fn add_task(&mut self, task: Task) {
