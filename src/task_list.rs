@@ -24,7 +24,7 @@ impl TaskList {
                 self.tasks.remove(i);
                 true
             }
-            None => false
+            None => false,
         }
     }
 

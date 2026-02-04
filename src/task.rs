@@ -1,8 +1,7 @@
+use serde::{Deserialize, Serialize};
 use std::fmt;
 use std::fmt::Formatter;
-use serde::{Deserialize, Serialize};
-#[derive(Debug)]
-#[derive(Serialize, Deserialize)]
+#[derive(Debug, Serialize, Deserialize)]
 pub struct Task {
     pub id: String,
     pub title: String,

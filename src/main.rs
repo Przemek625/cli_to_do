@@ -4,10 +4,10 @@ use std::string::String;
 mod task;
 mod task_list;
 
+use crate::task_list::TaskList;
 use std::fs::File;
 use std::io::{BufRead, BufReader, Write};
 use uuid::Uuid;
-use crate::task_list::TaskList;
 
 const FILE_NAME: &str = "tasks.jsonl";
 
@@ -29,7 +29,9 @@ fn handle_add_task(task_list: &mut TaskList) {
 fn handle_delete_task(task_list: &mut TaskList) {
     println!("What is the task`s id?");
     let mut buffer = String::new();
-    io::stdin().read_line(&mut buffer).expect("Exception occurred");
+    io::stdin()
+        .read_line(&mut buffer)
+        .expect("Exception occurred");
     let task_id = buffer.trim();
     if (task_list.remove_task(&task_id)) {
         println!("Task: {:?} has been deleted", task_id)
@@ -38,9 +40,13 @@ fn handle_delete_task(task_list: &mut TaskList) {
     }
 }
 
-
 fn handle_save_task_list(task_list: &TaskList) {
-    let mut file = File::options().create(true).write(true).truncate(true).open(&FILE_NAME).unwrap();
+    let mut file = File::options()
+        .create(true)
+        .write(true)
+        .truncate(true)
+        .open(&FILE_NAME)
+        .unwrap();
     for task in task_list.all() {
         let serialized_task = serde_json::to_string(&task).unwrap();
         file.write_all(format!("{}\n", serialized_task).as_bytes())
@@ -54,7 +60,7 @@ fn load_task_list_from_file() -> TaskList {
     let mut reader = BufReader::new(file);
     let mut task_list = TaskList::new();
     for line in reader.lines() {
-        let task:Task = serde_json::from_str(line.unwrap().as_str()).unwrap();
+        let task: Task = serde_json::from_str(line.unwrap().as_str()).unwrap();
         task_list.add_task(task)
     }
     task_list
@@ -96,9 +102,7 @@ fn handle_task_completed(task_list: &mut TaskList) -> bool {
     let task_id = buffer.trim();
     let task = task_list.get_by_id(task_id);
     match task {
-        None => {
-            false
-        }
+        None => false,
         Some(t) => {
             t.is_completed = true;
             println!("task {} has been completed", task_id);
@@ -144,10 +148,10 @@ fn main() {
             }
             "3" => {
                 handle_delete_task(&mut task_list);
-            },
+            }
             "4" => {
-              handle_list_tasks(&mut task_list);
-            },
+                handle_list_tasks(&mut task_list);
+            }
             "5" => {
                 handle_task_completed(&mut task_list);
             }
@@ -158,4 +162,3 @@ fn main() {
         }
     }
 }
-
