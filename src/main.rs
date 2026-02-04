@@ -83,11 +83,18 @@ fn handle_exit(task_list: &TaskList) {
     println!("Finished the program!");
 }
 
+fn handle_list_tasks(task_list: &TaskList) {
+    for task in task_list.all() {
+        println!("{}", task)
+    }
+}
+
 fn print_options() {
     println!("0: Exit");
     println!("1: Add new task");
     println!("2: Save task_list list");
     println!("3: Delete task");
+    println!("4: List tasks");
 }
 fn print_menu() {
     println!("\n=== To-Do CLI Menu ===");
@@ -118,7 +125,10 @@ fn main() {
             }
             "3" => {
                 handle_delete_task(&mut task_list);
-            }
+            },
+            "4" => {
+              handle_list_tasks(&mut task_list);
+            },
             _ => {
                 println!("Invalid option one of:");
                 print_options();

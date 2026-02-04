@@ -1,3 +1,5 @@
+use std::fmt;
+use std::fmt::Formatter;
 use serde::{Deserialize, Serialize};
 #[derive(Debug)]
 #[derive(Serialize, Deserialize)]
@@ -10,5 +12,11 @@ pub struct Task {
 impl Task {
     fn set_done(&mut self) {
         self.is_completed = true;
+    }
+}
+
+impl fmt::Display for Task {
+    fn fmt(&self, f: &mut Formatter<'_>) -> fmt::Result {
+        write!(f, "{} {} {}", self.id, self.title, self.is_completed)
     }
 }
