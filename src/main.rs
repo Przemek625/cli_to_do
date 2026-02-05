@@ -111,13 +111,20 @@ fn handle_task_completed(task_list: &mut TaskList) -> bool {
     }
 }
 
+fn handle_list_completed_tasks(task_list: &mut TaskList) {
+    for task in task_list.list_completed() {
+        println!("{}", task)
+    }
+}
+
 fn print_options() {
     println!("0: Exit");
     println!("1: Add new task");
     println!("2: Save task_list list");
     println!("3: Delete task");
     println!("4: List tasks");
-    println!("5: Set task completed");
+    println!("5: List completed tasks");
+    println!("6: Set task completed");
 }
 fn print_menu() {
     println!("\n=== To-Do CLI Menu ===");
@@ -153,6 +160,9 @@ fn main() {
                 handle_list_tasks(&mut task_list);
             }
             "5" => {
+                handle_list_completed_tasks(&mut task_list);
+            }
+            "6" => {
                 handle_task_completed(&mut task_list);
             }
             _ => {

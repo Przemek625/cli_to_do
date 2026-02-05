@@ -28,6 +28,10 @@ impl TaskList {
         }
     }
 
+    pub fn list_completed(&self) -> Vec<&Task> {
+        self.tasks.iter().filter(|task| task.is_completed).collect()
+    }
+
     pub fn all(&self) -> &Vec<Task> {
         &self.tasks
     }
