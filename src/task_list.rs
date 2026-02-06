@@ -32,6 +32,13 @@ impl TaskList {
         self.tasks.iter().filter(|task| task.is_completed).collect()
     }
 
+    pub fn find_by_keyword(&self, keyword: &str) -> Vec<&Task> {
+        self.tasks
+            .iter()
+            .filter(|task| task.title.to_lowercase().contains(keyword))
+            .collect()
+    }
+
     pub fn all(&self) -> &Vec<Task> {
         &self.tasks
     }

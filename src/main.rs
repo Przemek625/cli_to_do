@@ -17,11 +17,8 @@ fn handle_add_task(task_list: &mut TaskList) {
     io::stdin()
         .read_line(&mut buffer)
         .expect("Failed to read line");
-    let task = Task {
-        id: Uuid::new_v4().to_string(),
-        title: String::from(buffer.trim()),
-        is_completed: false,
-    };
+    let title = String::from(buffer.trim());
+    let task = Task::new(&title);
     task_list.add_task(task);
     println!("Added a new task")
 }
