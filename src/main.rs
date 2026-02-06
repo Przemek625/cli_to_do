@@ -112,6 +112,21 @@ fn handle_list_completed_tasks(task_list: &mut TaskList) {
     }
 }
 
+fn handle_find_tasks_by_keyword(task_list: &TaskList) {
+    println!("keyword:");
+    let mut buffer = String::new();
+    io::stdin().read_line(&mut buffer).unwrap();
+    let keyword = buffer.trim();
+    let filtered_tasks = task_list.find_by_keyword(keyword);
+    if filtered_tasks.is_empty() {
+        println!("There are no matching results for the query: {}", keyword)
+    } else {
+        for task in filtered_tasks {
+            println!("{}", task);
+        }
+    }
+}
+
 fn print_options() {
     println!("0: Exit");
     println!("1: Add new task");
@@ -120,6 +135,7 @@ fn print_options() {
     println!("4: List tasks");
     println!("5: List completed tasks");
     println!("6: Set task completed");
+    println!("7: List task matching keyword")
 }
 fn print_menu() {
     println!("\n=== To-Do CLI Menu ===");
@@ -159,6 +175,9 @@ fn main() {
             }
             "6" => {
                 handle_task_completed(&mut task_list);
+            },
+            "7" => {
+                handle_find_tasks_by_keyword(&mut task_list);
             }
             _ => {
                 println!("Invalid option one of:");

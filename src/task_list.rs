@@ -33,9 +33,10 @@ impl TaskList {
     }
 
     pub fn find_by_keyword(&self, keyword: &str) -> Vec<&Task> {
+        let keyword = keyword.to_lowercase();
         self.tasks
             .iter()
-            .filter(|task| task.title.to_lowercase().contains(keyword))
+            .filter(|task| task.title.to_lowercase().contains(&keyword))
             .collect()
     }
 
