@@ -175,7 +175,7 @@ fn main() {
             }
             "6" => {
                 handle_task_completed(&mut task_list);
-            },
+            }
             "7" => {
                 handle_find_tasks_by_keyword(&mut task_list);
             }
