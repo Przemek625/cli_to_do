@@ -7,8 +7,6 @@ mod task_list;
 use crate::task_list::TaskList;
 use std::fs::File;
 use std::io::{BufRead, BufReader, Write};
-use uuid::Uuid;
-
 const FILE_NAME: &str = "tasks.jsonl";
 
 fn handle_add_task(task_list: &mut TaskList) {
