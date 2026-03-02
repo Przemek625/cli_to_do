@@ -4,11 +4,15 @@ use std::io::{BufRead, BufReader, Write};
 
 pub struct TaskList {
     tasks: Vec<Task>,
+    file_name: String,
 }
 
 impl TaskList {
-    pub fn new() -> Self {
-        TaskList { tasks: Vec::new() }
+    pub fn new(file_name: &str) -> Self {
+        TaskList {
+            tasks: Vec::new(),
+            file_name: file_name.to_string(),
+        }
     }
 
     pub fn get_by_id(&mut self, id: &str) -> Option<&mut Task> {
@@ -46,23 +50,23 @@ impl TaskList {
         &self.tasks
     }
 
-    pub fn save_to_file(&self, file_name: &str) {
+    pub fn save_to_file(&self) {
         let mut file = File::options()
             .create(true)
             .write(true)
             .truncate(true)
-            .open(file_name)
+            .open(&self.file_name)
             .unwrap();
         for task in self.all() {
             let serialized_task = serde_json::to_string(&task).unwrap();
             file.write_all(format!("{}\n", serialized_task).as_bytes())
                 .unwrap();
         }
-        println!("Saved task_list to: {:?}", file_name);
+        println!("Saved task_list to: {:?}", &self.file_name);
     }
 
     pub fn from_file(file_name: &str) -> Self {
-        let mut task_list = Self::new();
+        let mut task_list = Self::new(file_name);
         let file = File::open(&file_name).unwrap();
         let reader = BufReader::new(file);
         for line in reader.lines() {

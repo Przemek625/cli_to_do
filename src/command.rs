@@ -19,7 +19,7 @@ impl Command for ExitCommand {
         loop {
             match input.as_str() {
                 "y" => {
-                    task_list.save_to_file(FILE_NAME);
+                    task_list.save_to_file();
                     exit(0);
                 }
                 "n" => {
@@ -113,5 +113,13 @@ impl Command for FindTaskByKeywordCommand {
                 println!("{}", task);
             }
         }
+    }
+}
+
+pub struct SaveTaskList;
+
+impl Command for SaveTaskList {
+    fn execute(&mut self, task_list: &mut TaskList) {
+        task_list.save_to_file()
     }
 }
