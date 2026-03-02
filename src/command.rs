@@ -90,7 +90,7 @@ impl Command for CompleteTaskCommand {
         match task {
             None => (),
             Some(task) => {
-                task.is_completed = true;
+                task.set_done();
                 println!("task {} has been completed", task_id);
             }
         }
