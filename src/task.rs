@@ -5,6 +5,13 @@ use std::fmt::Formatter;
 use uuid::Uuid;
 
 #[derive(Debug, Serialize, Deserialize)]
+pub enum Priority {
+    LOW,
+    MEDIUM,
+    HIGH
+}
+
+#[derive(Debug, Serialize, Deserialize)]
 pub struct Task {
     pub id: String,
     pub title: String,
@@ -12,6 +19,7 @@ pub struct Task {
     pub tags: Option<Vec<String>>,
     pub created_at: Option<DateTime<Utc>>,
     pub completed_at: Option<DateTime<Utc>>,
+    pub priority: Priority
 }
 
 impl fmt::Display for Task {
@@ -29,6 +37,7 @@ impl Task {
             tags: None,
             created_at: Some(Utc::now()),
             completed_at: None,
+            priority: Priority::LOW
         }
     }
     pub fn set_tags(&mut self, tags: Vec<String>) {
