@@ -1,7 +1,7 @@
 use crate::constants::FILE_NAME;
 use crate::task::{Priority, Task};
 use crate::task_list::TaskList;
-use crate::utils::prompt_line;
+use crate::utils::{parse_tags, prompt_line};
 use std::io;
 use std::process::exit;
 use std::str::FromStr;
@@ -40,10 +40,12 @@ pub struct AddTaskCommand;
 
 impl Command for AddTaskCommand {
     fn execute(&mut self, task_list: &mut TaskList) {
-        let title = prompt_line("Title: ");
-        let priority = prompt_line("Priority(low/medium/high): ");
+        let title = prompt_line("Title: ", None);
+        let priority = prompt_line("Priority(low/medium/high): ", None);
+        let tags = prompt_line("Tags: ", Some("separate tags with comma"));
         let mut task = Task::new(&title);
         task.set_priority(Priority::from_str(&priority).unwrap());
+        task.set_tags(parse_tags(&tags));
         task_list.add_task(task);
         println!("Added a new task")
     }
