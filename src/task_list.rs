@@ -70,7 +70,13 @@ impl TaskList {
         let file = File::open(&file_name).unwrap();
         let reader = BufReader::new(file);
         for line in reader.lines() {
-            let task: Task = serde_json::from_str(line.unwrap().as_str()).unwrap();
+            let line = line.unwrap();
+
+            if line.is_empty() {
+                continue;
+            }
+
+            let task: Task = serde_json::from_str(&line).unwrap();
             task_list.add_task(task)
         }
         task_list

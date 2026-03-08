@@ -5,12 +5,12 @@ mod constants;
 mod menu;
 mod task;
 mod task_list;
+mod utils;
 
 use crate::command::{
     AddTaskCommand, CompleteTaskCommand, DeleteTaskCommand, ExitCommand, FindTaskByKeywordCommand,
     ListTasksCommand, SaveTaskList,
 };
-use crate::constants::FILE_NAME;
 use crate::menu::{Menu, MenuOption};
 use crate::task_list::TaskList;
 use config::Config;

@@ -2,13 +2,27 @@ use chrono::{DateTime, Utc};
 use serde::{Deserialize, Serialize};
 use std::fmt;
 use std::fmt::Formatter;
+use std::str::FromStr;
 use uuid::Uuid;
 
 #[derive(Debug, Serialize, Deserialize)]
 pub enum Priority {
-    LOW,
-    MEDIUM,
-    HIGH
+    Low,
+    Medium,
+    High,
+}
+
+impl FromStr for Priority {
+    type Err = ();
+
+    fn from_str(s: &str) -> Result<Priority, Self::Err> {
+        match s.to_lowercase().as_str() {
+            "low" => Ok(Priority::Low),
+            "medium" => Ok(Priority::Medium),
+            "high" => Ok(Priority::High),
+            _ => Err(()),
+        }
+    }
 }
 
 #[derive(Debug, Serialize, Deserialize)]
@@ -19,7 +33,7 @@ pub struct Task {
     pub tags: Option<Vec<String>>,
     pub created_at: Option<DateTime<Utc>>,
     pub completed_at: Option<DateTime<Utc>>,
-    pub priority: Priority
+    pub priority: Priority,
 }
 
 impl fmt::Display for Task {
@@ -37,11 +51,15 @@ impl Task {
             tags: None,
             created_at: Some(Utc::now()),
             completed_at: None,
-            priority: Priority::LOW
+            priority: Priority::Low,
         }
     }
     pub fn set_tags(&mut self, tags: Vec<String>) {
         self.tags = Some(tags);
+    }
+
+    pub fn set_priority(&mut self, priority: Priority) {
+        self.priority = priority;
     }
 
     pub fn set_done(&mut self) {

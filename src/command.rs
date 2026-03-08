@@ -1,8 +1,10 @@
 use crate::constants::FILE_NAME;
-use crate::task::Task;
+use crate::task::{Priority, Task};
 use crate::task_list::TaskList;
+use crate::utils::prompt_line;
 use std::io;
 use std::process::exit;
+use std::str::FromStr;
 
 pub trait Command {
     fn execute(&mut self, task_list: &mut TaskList);
@@ -38,13 +40,10 @@ pub struct AddTaskCommand;
 
 impl Command for AddTaskCommand {
     fn execute(&mut self, task_list: &mut TaskList) {
-        let mut buffer = String::new();
-        println!("Task title:");
-        io::stdin()
-            .read_line(&mut buffer)
-            .expect("Failed to read line");
-        let title = String::from(buffer.trim());
-        let task = Task::new(&title);
+        let title = prompt_line("Title: ");
+        let priority = prompt_line("Priority(low/medium/high): ");
+        let mut task = Task::new(&title);
+        task.set_priority(Priority::from_str(&priority).unwrap());
         task_list.add_task(task);
         println!("Added a new task")
     }
